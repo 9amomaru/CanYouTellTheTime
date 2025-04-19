@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Abdullah & Aadya's Galaxy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Indie Flower', cursive;
+      color: #f3e5f5;
+      overflow-x: hidden;
+      background: radial-gradient(circle at bottom, #0b0c2a, #02030d);
+    }
+
+    .section-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .falling-stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .falling-stars {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        opacity: 0; /* Initially hide the stars */
+        transition: opacity 7s ease-in-out; /* Smooth fade-in effect */
+      }
+      
+      .star {
+        position: absolute;
+        top: -10px;
+        width: 2px;
+        height: 60px;
+        background: linear-gradient(white, transparent);
+        animation: fall linear infinite;
+        opacity: 0.7;
+        transform: rotate(20deg);
+      }
+      
+      @keyframes fall {
+        0% { transform: translateY(-100px) rotate(20deg); opacity: 0; }
+        30% { opacity: 1; }
+        100% { transform: translateY(100vh) rotate(20deg); opacity: 0; }
+      }
+      
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .quote {
+      font-size: 1.4em;
+      color: #d1c4e9;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 15px 40px;
+      font-size: 1.3em;
+      background-color: #7c4dff;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: 0.4s;
+      animation: glow 2s infinite alternate;
+    }
+
+    button:hover {
+      background-color: #b388ff;
+      transform: scale(1.05);
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px #9575cd; }
+      to { box-shadow: 0 0 20px #d1c4e9; }
+    }
+
+    .main {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sky {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 5vh;
+      min-height: 70vh;
+      width: 100%;
+    }
+
+    .clock-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #fff;
+      border-radius: 20px;
+      padding: 25px;
+      width: 250px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(6px);
+      margin: 20px;
+    }
+
+    .clock {
+      font-size: 2em;
+      color: #f3e5f5;
+      margin-top: 15px;
+    }
+
+    .heart {
+      font-size: 60px;
+      animation: beat 1s infinite;
+      color: #fff59d;
+      margin: 20px;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .footer {
+      font-size: 1.2em;
+      padding: 20px;
+      color: #ce93d8;
+    }
+
+    audio {
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Music -->
+  <audio id="bg-music" src="song.mp3" loop></audio>
+
+  <!-- Stars Background -->
+  <div class="falling-stars" id="falling-stars"></div>
+
+  <!-- Landing Section -->
+  <section class="section-container" id="landing">
+    <h1>🌌 Welcome to Abdullah & Aadya's Galaxy 🌌</h1>
+    <p class="quote">“No matter how far the stars are, our hearts shine together 💖”</p>
+    <button id="enter-btn">Take me to our galaxy 💫</button>
+  </section>
+
+  <!-- Main Clock Section -->
+  <section class="section-container main" id="main">
+    <div class="sky">
+      <div class="clock-box">
+        <h2>🌞 Abdullah in Egypt 🇪🇬</h2>
+        <p id="time-egypt" class="clock"></p>
+      </div>
+
+      <div class="heart">🌙</div>
+
+      <div class="clock-box">
+        <h2>🌜 Aadya in India 🇮🇳</h2>
+        <p id="time-india" class="clock"></p>
+      </div>
+    </div>
+    <p class="footer">Across galaxies, we still orbit the same love 🌌</p>
+  </section>
+
+  <script>
+    // Function to start the background music with calm fade-in effect
+function playCalmMusic() {
+    const audio = document.getElementById("bg-music");
+    
+    // Set the initial volume to a low level (calm background music)
+    audio.volume = 0.1; 
+    
+    // Play the song
+    audio.play().then(() => {
+      let vol = 0.1; // Start from low volume
+      const fadeIn = setInterval(() => {
+        if (vol < 0.5) {  // Gradually increase volume to a reasonable calm level
+          vol += 0.05;
+          audio.volume = vol; // Increase the volume
+        } else {
+          clearInterval(fadeIn); // Stop the fade-in once the desired volume is reached
+        }
+      }, 200);
+    }).catch(e => console.warn("Autoplay error:", e));
+  }
+  
+  // Play the music when the user clicks on the button
+  document.getElementById('enter-btn').addEventListener('click', () => {
+    playCalmMusic(); // Call the function to play music
+    
+    // Hide the landing page and show the main content
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('main').style.display = 'flex';
+  });
+  
+    // Show clocks and start music
+    document.getElementById('enter-btn').addEventListener('click', () => {
+      const audio = document.getElementById("bg-music");
+      audio.volume = 0;
+      audio.play().then(() => {
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+          if (vol < 1) {
+            vol += 0.05;
+            audio.volume = Math.min(vol, 1);
+          } else {
+            clearInterval(fadeIn);
+          }
+        }, 200);
+      }).catch(e => console.warn("Autoplay error:", e));
+
+      document.getElementById('landing').style.display = 'none';
+      document.getElementById('main').style.display = 'flex';
+    });
+
+    // Falling stars
+    // Function to create falling stars
+function createFallingStars() {
+    const container = document.getElementById("falling-stars");
+    const starCount = 80;
+    
+    // Create stars
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement("div");
+      star.classList.add("star");
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.animationDuration = (Math.random() * 3 + 2) + "s"; // Random duration for falling speed
+      star.style.animationDelay = Math.random() * 5 + "s"; // Random delay for different fall times
+      container.appendChild(star);
+    }
+  
+    // Fade in the stars after page load
+    window.addEventListener('load', () => {
+      container.style.opacity = 1; // Stars appear after page is loaded
+    });
+  }
+  
+  window.onload = createFallingStars; // Call function to create and show falling stars
+  
+
+    // Clocks
+    function updateTime() {
+      const egyptTime = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Africa/Cairo",
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      const indiaTime = new Date().toLocaleTimeString("en-US", {
+        timeZone: "Asia/Kolkata",
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      document.getElementById("time-egypt").textContent = egyptTime;
+      document.getElementById("time-india").textContent = indiaTime;
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+    createFallingStars();
+  </script>
+
+</body>
+</html>
